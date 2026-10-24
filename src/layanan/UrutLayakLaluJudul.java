@@ -1,17 +1,23 @@
 package layanan;
 
+import java.util.Comparator;
 import model.Koleksi;
 
-import java.util.Comparator;
-
-// Koleksi layak pinjam tampil lebih dulu, lalu diurutkan berdasarkan judul
-public class UrutLayakLaluJudul implements Comparator<Koleksi> {
-    private final Comparator<Koleksi> pembanding =
-            Comparator.comparing(Koleksi::layakDipinjam, Comparator.reverseOrder())
-                    .thenComparing(Koleksi::getJudul, String.CASE_INSENSITIVE_ORDER);
+public class UrutLayakLaluJudul
+        implements Comparator<Koleksi> {
 
     @Override
     public int compare(Koleksi a, Koleksi b) {
-        return pembanding.compare(a, b);
+
+        int hasil = Boolean.compare(
+                b.layakDipinjam(),
+                a.layakDipinjam());
+
+        if (hasil != 0) {
+            return hasil;
+        }
+
+        return String.CASE_INSENSITIVE_ORDER.compare(
+                a.getJudul(), b.getJudul());
     }
 }

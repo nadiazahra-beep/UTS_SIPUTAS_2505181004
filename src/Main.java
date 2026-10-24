@@ -1,48 +1,98 @@
-import eksepsi.PustakaException;
-import layanan.EksporKatalog;
-import layanan.KatalogPerpustakaan;
-import layanan.UrutLayakLaluJudul;
-import model.BerkasDigital;
-import model.BukuCetak;
-import model.Majalah;
-
 import java.io.IOException;
 
+import model.*;
+import layanan.*;
+import eksepsi.*;
+
 public class Main {
+
     public static void main(String[] args) {
-        KatalogPerpustakaan katalog = new KatalogPerpustakaan();
 
-        katalog.tambah(new BukuCetak("BK-001", "Java How to Program", 2022, 620, "A-12", 1, false));
-        katalog.tambah(new BukuCetak("BK-002", "Basis Data Relasional", 2021, 410, "B-04", 2, true));
-        katalog.tambah(new Majalah("MJ-001", "Info Teknologi Edisi 88", 2026, 88, "Agustus", true, "M-01", 1));
-        katalog.tambah(new Majalah("MJ-002", "Info Teknologi Edisi 87", 2026, 87, "Juli", false, "M-02", 1));
-        katalog.tambah(new BerkasDigital("BD-001", "Panduan Pemrograman Java", 2024, 15, "unduh.polmed.ac.id/bd001"));
-        katalog.tambah(new BerkasDigital("BD-002", "Jurnal Rekayasa Perangkat", 2025, 8, "unduh.polmed.ac.id/bd002"));
+        KatalogPerpustakaan katalog =
+                new KatalogPerpustakaan();
 
-        System.out.println("=== STATUS KOLEKSI (urutan awal) ===");
+        // Data uji 1
+        katalog.tambahKoleksi(new BukuCetak(
+                "BK-001", "Java How to Program",
+                2022, 620, "A-12", "Lantai 1", false));
+
+        // Data uji 2
+        katalog.tambahKoleksi(new BukuCetak(
+                "BK-002", "Basis Data Relasional",
+                2021, 410, "B-04", "Lantai 1", true));
+
+        // Data uji 3
+        katalog.tambahKoleksi(new Majalah(
+                "MJ-001", "Info Teknologi Edisi 88",
+                2026, "88", "Agustus", "C-01",
+                "Lantai 2", true));
+
+        // Data uji 4
+        katalog.tambahKoleksi(new Majalah(
+                "MJ-002", "Info Teknologi Edisi 87",
+                2026, "87", "Juli", "C-02",
+                "Lantai 2", false));
+
+        // Data uji 5
+        katalog.tambahKoleksi(new BerkasDigital(
+                "BD-001", "Panduan Pemrograman Java",
+                2024, 15,
+                "unduh.polmed.ac.id/bd001"));
+
+        // Data uji 6
+        katalog.tambahKoleksi(new BerkasDigital(
+                "BD-002", "Jurnal Rekayasa Perangkat",
+                2025, 8,
+                "unduh.polmed.ac.id/bd002"));
+
+        System.out.println("=== KATALOG SIPUSTA ===");
         katalog.cetakStatus();
 
-        System.out.println("\n=== STATUS KOLEKSI (layak dulu, lalu judul) ===");
+        System.out.println("\n=== URUTAN KOLEKSI ===");
         katalog.urut(new UrutLayakLaluJudul());
         katalog.cetakStatus();
 
         System.out.println("\n=== UJI PEMINJAMAN ===");
-        String[] kodeUji = {"BK-001", "BK-001", "BK-002", "MJ-001", "BD-001", "XX-999"};
-        for (String kode : kodeUji) {
-            try {
-                katalog.pinjam(kode);
-                System.out.println("Berhasil meminjam koleksi " + kode);
-            } catch (PustakaException e) {
-                System.out.println(e.getMessage());
-            }
-        }
+
+        cobaPinjam(katalog, "BK-001");
+        cobaPinjam(katalog, "BK-001");
+        cobaPinjam(katalog, "BK-002");
+        cobaPinjam(katalog, "MJ-001");
 
         System.out.println("\n=== EKSPOR KATALOG ===");
+
         try {
-            new EksporKatalog().ekspor(katalog, "katalog.txt");
-            System.out.println("Katalog berhasil ditulis ke katalog.txt");
+            EksporKatalog ekspor = new EksporKatalog();
+
+            ekspor.ekspor(
+                    katalog.getDaftarKoleksi(),
+                    "katalog.txt");
+
+            System.out.println(
+                    "Katalog berhasil disimpan ke katalog.txt");
+
         } catch (IOException e) {
-            System.out.println("Gagal menulis berkas katalog: " + e.getMessage());
+            System.out.println(
+                    "Gagal menyimpan katalog: "
+                    + e.getMessage());
+        }
+    }
+
+    public static void cobaPinjam(
+            KatalogPerpustakaan katalog, String kode) {
+
+        try {
+            katalog.pinjam(kode);
+
+        } catch (KoleksiSedangDipinjamException
+                | KoleksiTidakLayakException e) {
+
+            System.out.println(
+                    "Peminjaman gagal: " + e.getMessage());
+
+        } catch (IllegalArgumentException e) {
+
+            System.out.println(e.getMessage());
         }
     }
 }

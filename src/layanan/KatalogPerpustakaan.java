@@ -1,59 +1,75 @@
 package layanan;
 
-import eksepsi.KoleksiSedangDiPinjamException;
-import eksepsi.KoleksiSedangDiPinjamException;
-import eksepsi.KoleksiTidakLayakException;
-import eksepsi.PustakaException;
-import model.Koleksi;
-
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import model.Koleksi;
+import eksepsi.KoleksiSedangDipinjamException;
+import eksepsi.KoleksiTidakLayakException;
 
 public class KatalogPerpustakaan {
-    private final List<Koleksi> daftarKoleksi = new ArrayList<>();
 
-    public void tambah(Koleksi koleksi) {
+    private List<Koleksi> daftarKoleksi =
+            new ArrayList<>();
+
+    public void tambahKoleksi(Koleksi koleksi) {
         daftarKoleksi.add(koleksi);
     }
 
     public List<Koleksi> getDaftarKoleksi() {
-        return Collections.unmodifiableList(daftarKoleksi);
+        return new ArrayList<>(daftarKoleksi);
     }
 
-    // Polimorfik: tanpa percabangan tipe, cukup memanggil method milik kelas induk
     public void cetakStatus() {
-        for (Koleksi k : daftarKoleksi) {
-            String layak = k.layakDipinjam() ? "LAYAK DIPINJAM" : "TIDAK LAYAK DIPINJAM";
-            String dipinjam = k.isSedangDipinjam() ? " (sedang dipinjam)" : "";
-            System.out.println(k.deskripsi());
-            System.out.println("   Status: " + layak + dipinjam);
+        for (Koleksi koleksi : daftarKoleksi) {
+            System.out.println(koleksi.deskripsi());
+            System.out.println("Status: "
+                    + koleksi.statusPinjam());
+            System.out.println("Kelayakan: "
+                    + (koleksi.layakDipinjam()
+                    ? "Layak dipinjam"
+                    : "Tidak layak dipinjam"));
+            System.out.println("--------------------------------");
         }
     }
 
-    // Aturan pengurutan dapat diganti dari luar
-    public void urut(Comparator<Koleksi> pembanding) {
-        daftarKoleksi.sort(pembanding);
+    public void urut(Comparator<Koleksi> aturan) {
+        daftarKoleksi.sort(aturan);
     }
 
-    public void pinjam(String kodeKoleksi) throws PustakaException {
-        Koleksi k = cari(kodeKoleksi);
-        if (k.isSedangDipinjam()) {
-            throw new KoleksiSedangDiPinjamException(k.getJudul());
-        }
-        if (!k.layakDipinjam()) {
-            throw new KoleksiTidakLayakException(k.getJudul(), k.alasanTidakLayak());
-        }
-        k.setSedangDipinjam(true);
-    }
+    public void pinjam(String kode)
+            throws KoleksiSedangDipinjamException,
+                   KoleksiTidakLayakException {
 
-    private Koleksi cari(String kodeKoleksi) throws PustakaException {
-        for (Koleksi k : daftarKoleksi) {
-            if (k.getKodeKoleksi().equalsIgnoreCase(kodeKoleksi)) {
-                return k;
+        Koleksi target = null;
+
+        for (Koleksi koleksi : daftarKoleksi) {
+            if (koleksi.getKodeKoleksi()
+                    .equalsIgnoreCase(kode)) {
+                target = koleksi;
+                break;
             }
         }
-        throw new PustakaException("Koleksi dengan kode " + kodeKoleksi + " tidak ditemukan di katalog.");
+
+        if (target == null) {
+            throw new IllegalArgumentException(
+                    "Kode koleksi tidak ditemukan.");
+        }
+
+        if (target.isSedangDipinjam()) {
+            throw new KoleksiSedangDipinjamException(
+                    "Koleksi sedang dipinjam orang lain.");
+        }
+
+        if (!target.layakDipinjam()) {
+            throw new KoleksiTidakLayakException(
+                    "Koleksi belum dapat dipinjam "
+                    + "karena tidak memenuhi aturan.");
+        }
+
+        target.setSedangDipinjam(true);
+
+        System.out.println("Berhasil meminjam: "
+                + target.getJudul());
     }
 }

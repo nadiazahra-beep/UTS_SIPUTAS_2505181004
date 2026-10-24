@@ -1,30 +1,47 @@
 package model;
 
 public abstract class Koleksi {
-    private final String kodeKoleksi;
-    private final String judul;
-    private final int tahunTerbit;
+    private String kodeKoleksi;
+    private String judul;
+    private int tahunTerbit;
     private boolean sedangDipinjam;
 
     public Koleksi(String kodeKoleksi, String judul, int tahunTerbit) {
         this.kodeKoleksi = kodeKoleksi;
         this.judul = judul;
         this.tahunTerbit = tahunTerbit;
+        this.sedangDipinjam = false;
     }
 
-    public String getKodeKoleksi() { return kodeKoleksi; }
-    public String getJudul() { return judul; }
-    public int getTahunTerbit() { return tahunTerbit; }
-    public boolean isSedangDipinjam() { return sedangDipinjam; }
-    public void setSedangDipinjam(boolean sedangDipinjam) { this.sedangDipinjam = sedangDipinjam; }
-
-    // Aturan kelayakan pinjam: berbeda di setiap jenis koleksi
     public abstract boolean layakDipinjam();
 
-    // Alasan koleksi tidak layak, dipakai untuk pesan eksepsi
-    public abstract String alasanTidakLayak();
-
     public String deskripsi() {
-        return "[" + kodeKoleksi + "] \"" + judul + "\" (" + tahunTerbit + ")";
+        return kodeKoleksi + " | " + judul
+                + " | Tahun " + tahunTerbit;
+    }
+
+    public String getKodeKoleksi() {
+        return kodeKoleksi;
+    }
+
+    public String getJudul() {
+        return judul;
+    }
+
+    public int getTahunTerbit() {
+        return tahunTerbit;
+    }
+
+    public boolean isSedangDipinjam() {
+        return sedangDipinjam;
+    }
+
+    public void setSedangDipinjam(boolean sedangDipinjam) {
+        this.sedangDipinjam = sedangDipinjam;
+    }
+
+    public String statusPinjam() {
+        return sedangDipinjam
+                ? "Sedang dipinjam" : "Tersedia";
     }
 }

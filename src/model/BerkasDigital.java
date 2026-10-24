@@ -1,18 +1,16 @@
 package model;
 
-// Tidak mengimplementasikan Terarsip karena tidak memiliki lokasi fisik di rak
 public class BerkasDigital extends Koleksi {
-    private final int ukuranMB;
-    private final String tautanUnduh;
+    private double ukuranMB;
+    private String tautanUnduh;
 
-    public BerkasDigital(String kodeKoleksi, String judul, int tahunTerbit, int ukuranMB, String tautanUnduh) {
-        super(kodeKoleksi, judul, tahunTerbit);
+    public BerkasDigital(String kode, String judul,
+            int tahun, double ukuranMB, String tautanUnduh) {
+
+        super(kode, judul, tahun);
         this.ukuranMB = ukuranMB;
         this.tautanUnduh = tautanUnduh;
     }
-
-    public int getUkuranMB() { return ukuranMB; }
-    public String getTautanUnduh() { return tautanUnduh; }
 
     @Override
     public boolean layakDipinjam() {
@@ -20,12 +18,9 @@ public class BerkasDigital extends Koleksi {
     }
 
     @Override
-    public String alasanTidakLayak() {
-        return "berkas digital selalu dapat dipinjam";
-    }
-
-    @Override
     public String deskripsi() {
-        return super.deskripsi() + " | Berkas Digital, " + ukuranMB + " MB | " + tautanUnduh;
+        return super.deskripsi()
+                + " | Berkas digital | " + ukuranMB
+                + " MB | Unduh: " + tautanUnduh;
     }
 }

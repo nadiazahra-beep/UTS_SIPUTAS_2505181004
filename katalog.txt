@@ -1,8 +1,8 @@
-KODE     JENIS          JUDUL                            TAHUN  KELAYAKAN   
-----------------------------------------------------------------------------
-MJ-002   Majalah        Info Teknologi Edisi 87          2026   Layak       
-BK-001   BukuCetak      Java How to Program              2022   Layak       
-BD-002   BerkasDigital  Jurnal Rekayasa Perangkat        2025   Layak       
-BD-001   BerkasDigital  Panduan Pemrograman Java         2024   Layak       
-BK-002   BukuCetak      Basis Data Relasional            2021   Tidak layak 
-MJ-001   Majalah        Info Teknologi Edisi 88          2026   Tidak layak 
+KODE     | JUDUL                              | TAHUN  | STATUS PINJAM      | KELAYAKAN
+----------------------------------------------------------------------------------------------------
+MJ-002   | Info Teknologi Edisi 87            | 2026   | Tersedia           | Layak
+BK-001   | Java How to Program                | 2022   | Sedang dipinjam    | Layak
+BD-002   | Jurnal Rekayasa Perangkat          | 2025   | Tersedia           | Layak
+BD-001   | Panduan Pemrograman Java           | 2024   | Tersedia           | Layak
+BK-002   | Basis Data Relasional              | 2021   | Tersedia           | Tidak layak
+MJ-001   | Info Teknologi Edisi 88            | 2026   | Tersedia           | Tidak layak

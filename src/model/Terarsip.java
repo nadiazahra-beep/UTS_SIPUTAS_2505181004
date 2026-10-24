@@ -3,9 +3,10 @@ package model;
 public interface Terarsip {
     String nomorRak();
 
-    int lokasiLantai();
+    String lokasiLantai();
 
     default String ringkasanArsip() {
-        return "Rak " + nomorRak() + ", Lantai " + lokasiLantai();
+        return "Rak " + nomorRak()
+                + ", " + lokasiLantai();
     }
 }

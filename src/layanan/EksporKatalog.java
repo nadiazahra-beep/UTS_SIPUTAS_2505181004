@@ -1,25 +1,43 @@
 package layanan;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
 import model.Koleksi;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-
 public class EksporKatalog {
-    private static final String FORMAT = "%-8s %-14s %-32s %-6s %-12s%n";
 
-    public void ekspor(KatalogPerpustakaan katalog, String namaBerkas) throws IOException {
-        try (PrintWriter out = new PrintWriter(new FileWriter(namaBerkas))) {
-            out.printf(FORMAT, "KODE", "JENIS", "JUDUL", "TAHUN", "KELAYAKAN");
-            out.println("-".repeat(76));
-            for (Koleksi k : katalog.getDaftarKoleksi()) {
-                out.printf(FORMAT,
+    public void ekspor(List<Koleksi> daftar,
+            String namaBerkas) throws IOException {
+
+        try (BufferedWriter writer =
+                Files.newBufferedWriter(
+                Path.of(namaBerkas),
+                StandardCharsets.UTF_8)) {
+
+            writer.write(String.format(
+                    "%-8s | %-34s | %-6s | %-18s | %s",
+                    "KODE", "JUDUL", "TAHUN",
+                    "STATUS PINJAM", "KELAYAKAN"));
+
+            writer.newLine();
+            writer.write("-".repeat(100));
+            writer.newLine();
+
+            for (Koleksi k : daftar) {
+                writer.write(String.format(
+                        "%-8s | %-34s | %-6d | %-18s | %s",
                         k.getKodeKoleksi(),
-                        k.getClass().getSimpleName(),
                         k.getJudul(),
                         k.getTahunTerbit(),
-                        k.layakDipinjam() ? "Layak" : "Tidak layak");
+                        k.statusPinjam(),
+                        k.layakDipinjam()
+                        ? "Layak" : "Tidak layak"));
+
+                writer.newLine();
             }
         }
     }

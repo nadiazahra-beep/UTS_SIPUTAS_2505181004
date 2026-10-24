@@ -1,21 +1,23 @@
 package model;
 
-public class BukuCetak extends Koleksi implements Terarsip {
-    private final int jumlahHalaman;
-    private final String nomorRak;
-    private final int lantai;
-    private final boolean sedangDiperbaiki;
+public class BukuCetak extends Koleksi
+        implements Terarsip {
 
-    public BukuCetak(String kodeKoleksi, String judul, int tahunTerbit,
-                     int jumlahHalaman, String nomorRak, int lantai, boolean sedangDiperbaiki) {
-        super(kodeKoleksi, judul, tahunTerbit);
+    private int jumlahHalaman;
+    private String rak;
+    private String lantai;
+    private boolean sedangDiperbaiki;
+
+    public BukuCetak(String kode, String judul, int tahun,
+            int jumlahHalaman, String rak, String lantai,
+            boolean sedangDiperbaiki) {
+
+        super(kode, judul, tahun);
         this.jumlahHalaman = jumlahHalaman;
-        this.nomorRak = nomorRak;
+        this.rak = rak;
         this.lantai = lantai;
         this.sedangDiperbaiki = sedangDiperbaiki;
     }
-
-    public int getJumlahHalaman() { return jumlahHalaman; }
 
     @Override
     public boolean layakDipinjam() {
@@ -23,18 +25,21 @@ public class BukuCetak extends Koleksi implements Terarsip {
     }
 
     @Override
-    public String alasanTidakLayak() {
-        return "buku ini sedang diperbaiki";
+    public String deskripsi() {
+        return super.deskripsi()
+                + " | Buku cetak | " + jumlahHalaman
+                + " halaman | " + ringkasanArsip()
+                + " | " + (sedangDiperbaiki
+                ? "Sedang diperbaiki" : "Tidak diperbaiki");
     }
 
     @Override
-    public String nomorRak() { return nomorRak; }
+    public String nomorRak() {
+        return rak;
+    }
 
     @Override
-    public int lokasiLantai() { return lantai; }
-
-    @Override
-    public String deskripsi() {
-        return super.deskripsi() + " | Buku Cetak, " + jumlahHalaman + " halaman | " + ringkasanArsip();
+    public String lokasiLantai() {
+        return lantai;
     }
 }

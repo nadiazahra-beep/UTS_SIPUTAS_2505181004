@@ -1,23 +1,25 @@
 package model;
 
-public class Majalah extends Koleksi implements Terarsip {
-    private final int edisi;
-    private final String bulanTerbit;
-    private final boolean edisiTerbaru;
-    private final String nomorRak;
-    private final int lantai;
+public class Majalah extends Koleksi
+        implements Terarsip {
 
-    public Majalah(String kodeKoleksi, String judul, int tahunTerbit,
-                   int edisi, String bulanTerbit, boolean edisiTerbaru, String nomorRak, int lantai) {
-        super(kodeKoleksi, judul, tahunTerbit);
+    private String edisi;
+    private String bulanTerbit;
+    private String rak;
+    private String lantai;
+    private boolean edisiTerbaru;
+
+    public Majalah(String kode, String judul, int tahun,
+            String edisi, String bulanTerbit, String rak,
+            String lantai, boolean edisiTerbaru) {
+
+        super(kode, judul, tahun);
         this.edisi = edisi;
         this.bulanTerbit = bulanTerbit;
-        this.edisiTerbaru = edisiTerbaru;
-        this.nomorRak = nomorRak;
+        this.rak = rak;
         this.lantai = lantai;
+        this.edisiTerbaru = edisiTerbaru;
     }
-
-    public int getEdisi() { return edisi; }
 
     @Override
     public boolean layakDipinjam() {
@@ -25,18 +27,22 @@ public class Majalah extends Koleksi implements Terarsip {
     }
 
     @Override
-    public String alasanTidakLayak() {
-        return "majalah ini adalah edisi terbaru dan hanya boleh dibaca di perpustakaan";
+    public String deskripsi() {
+        return super.deskripsi()
+                + " | Majalah | Edisi " + edisi
+                + " | " + bulanTerbit
+                + " | " + ringkasanArsip()
+                + " | " + (edisiTerbaru
+                ? "Edisi terbaru" : "Bukan edisi terbaru");
     }
 
     @Override
-    public String nomorRak() { return nomorRak; }
+    public String nomorRak() {
+        return rak;
+    }
 
     @Override
-    public int lokasiLantai() { return lantai; }
-
-    @Override
-    public String deskripsi() {
-        return super.deskripsi() + " | Majalah, edisi " + edisi + " (" + bulanTerbit + ") | " + ringkasanArsip();
+    public String lokasiLantai() {
+        return lantai;
     }
 }
